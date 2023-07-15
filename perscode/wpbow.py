@@ -77,7 +77,7 @@ class wPBoW(TransformerMixin):
         if singular:
             diagrams = [diagrams]
 
-        dgs = [np.copy(diagram, np.float64) for diagram in diagrams]
+        dgs = [np.copy(diagram).astype(np.float64) for diagram in diagrams]
         landscapes = [to_landscape(dg) for dg in dgs]
 
         # calculate cluster centers and return specific weightings
@@ -130,6 +130,6 @@ class wPBoW(TransformerMixin):
                 subsampled_points = np.random.choice(consolidated_landscapes.shape[0],
                        size=self.n_subsample, replace=False, p=consolidated_weighting)
             # cluster using kmeans
-            kmeans = KMeans(n_clusters = self.N).fit(consolidated_landscapes[subsampled_points])
+            kmeans = KMeans(n_clusters = self.N, n_init=10).fit(consolidated_landscapes[subsampled_points])
             self.cluster_centers = kmeans.cluster_centers_
         return weighting

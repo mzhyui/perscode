@@ -73,7 +73,7 @@ class PVLAD(TransformerMixin):
         if singular:
             diagrams = [diagrams]
 
-        dgs = [np.copy(diagram, np.float64) for diagram in diagrams]
+        dgs = [np.copy(diagram).astype(np.float64) for diagram in diagrams]
         landscapes = [to_landscape(dg) for dg in dgs]
 
         # calculate cluster centers
@@ -114,5 +114,5 @@ class PVLAD(TransformerMixin):
         Cluster the consolidated diagram and return the cluster centers
         """
         consolidated_landscapes = _consolidate(self, landscapes)
-        kmeans = KMeans(n_clusters = self.N, n_jobs=-1).fit(consolidated_landscapes)
+        kmeans = KMeans(n_clusters = self.N, n_init=10).fit(consolidated_landscapes)
         self.cluster_centers = kmeans.cluster_centers_
